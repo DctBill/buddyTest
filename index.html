@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Buddy · 飞书网页</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        background: #0f1419;
+        color: #e6edf3;
+      }
+      h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+      }
+      #sprite {
+        margin: 0;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        font-family:
+          ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono",
+          Menlo, monospace;
+        font-size: 14px;
+        line-height: 1.15;
+        letter-spacing: 0;
+        white-space: pre;
+        tab-size: 4;
+      }
+      .hint {
+        max-width: 28rem;
+        padding: 0 1rem;
+        font-size: 0.85rem;
+        color: #8b949e;
+        text-align: center;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Buddy · 网页 idle 演示</h1>
+    <pre id="sprite" aria-live="polite"></pre>
+    <p class="hint">
+      与终端同源 duck 三帧（眼睛为 ·）。将本页以 <strong>HTTPS</strong> 部署后，填到飞书开放平台「网页应用」的应用主页，即可在工作台固定打开。
+    </p>
+    <script>
+      const eye = "·";
+      const frames = [
+        [
+          "            ",
+          "    __      ",
+          "  <(" + eye + " )___  ",
+          "   (  ._>   ",
+          "    `--´    ",
+        ],
+        [
+          "            ",
+          "    __      ",
+          "  <(" + eye + " )___  ",
+          "   (  ._>   ",
+          "    `--´~   ",
+        ],
+        [
+          "            ",
+          "    __      ",
+          "  <(" + eye + " )___  ",
+          "   (  .__>  ",
+          "    `--´    ",
+        ],
+      ].map((lines) => lines.join("\n"));
+
+      const el = document.getElementById("sprite");
+      let i = 0;
+      const IDLE_MS = 500;
+      function tick() {
+        el.textContent = frames[i % frames.length];
+        i++;
+      }
+      tick();
+      setInterval(tick, IDLE_MS);
+    </script>
+  </body>
+</html>
