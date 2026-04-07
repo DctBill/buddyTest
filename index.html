@@ -7,7 +7,14 @@
     <style>
       :root {
         color-scheme: dark light;
-        font-family: system-ui, sans-serif;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "PingFang SC",
+          "Microsoft YaHei",
+          sans-serif;
       }
       body {
         margin: 0;
@@ -16,26 +23,51 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 1rem;
-        background: #0f1419;
+        gap: 0;
+        padding: 1rem;
+        box-sizing: border-box;
+        background: radial-gradient(
+            ellipse 90% 55% at 50% -5%,
+            #1e2a3a 0%,
+            transparent 55%
+          ),
+          #0a0d12;
         color: #e6edf3;
       }
+      .buddy-shell {
+        width: 100%;
+        max-width: 26rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1.5rem 1.35rem 1.35rem;
+        border-radius: 18px;
+        background: linear-gradient(165deg, #1a222d 0%, #131920 48%, #10151c 100%);
+        border: 1px solid rgba(88, 166, 255, 0.12);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.35),
+          0 20px 50px rgba(0, 0, 0, 0.45);
+      }
       h1 {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.05rem;
+        font-weight: 650;
         margin: 0;
+        text-align: center;
+        letter-spacing: 0.02em;
+        color: #f0f3f6;
       }
       #meta {
-        font-size: 0.85rem;
-        color: #8b949e;
+        font-size: 0.8rem;
+        color: #9da7b3;
         text-align: center;
-        max-width: 36rem;
-        padding: 0 1rem;
-        line-height: 1.45;
+        line-height: 1.5;
+        padding: 0 0.25rem;
       }
       /* 与 utils/theme.ts darkTheme + buddy/types RARITY_COLORS 对齐 */
       #sprite-panel {
         margin: 0;
+        flex-shrink: 0;
         padding: 1.25rem 1.5rem;
         border-radius: 12px;
         background: #161b22;
@@ -47,16 +79,23 @@
         line-height: 1.15;
         letter-spacing: 0;
         tab-size: 4;
+        box-sizing: border-box;
+        /* 爱心行最长约 17ch，避免抚摸时横向撑宽 */
+        min-width: 19ch;
+      }
+      .sprite-heart-slot {
+        min-height: 1.15em;
+        margin: 0 0 0.15em;
       }
       #sprite-heart {
-        display: none;
-        margin: 0 0 0.15em;
+        visibility: hidden;
+        margin: 0;
         white-space: pre;
         /* darkTheme.autoAccept — CompanionSprite 爱心行 color */
         color: rgb(175, 135, 255);
       }
       #sprite-heart.is-on {
-        display: block;
+        visibility: visible;
       }
       #sprite-body {
         margin: 0;
@@ -64,12 +103,19 @@
         color: inherit;
       }
       .hint {
-        max-width: 28rem;
-        padding: 0 1rem;
-        font-size: 0.85rem;
-        color: #8b949e;
+        max-width: 26rem;
+        margin: 0.5rem auto 0;
+        padding: 0 1rem 1rem;
+        font-size: 0.8rem;
+        color: #7d8794;
         text-align: center;
-        line-height: 1.5;
+        line-height: 1.55;
+      }
+      .hint code {
+        font-size: 0.78em;
+        padding: 0.1em 0.35em;
+        border-radius: 4px;
+        background: rgba(88, 166, 255, 0.08);
       }
       .user-row {
         display: flex;
@@ -78,9 +124,31 @@
         justify-content: center;
         gap: 0.5rem 0.75rem;
         max-width: 32rem;
-        padding: 0 1rem;
+        padding: 0;
         font-size: 0.8rem;
-        color: #8b949e;
+        color: #9da7b3;
+      }
+      .buddy-shell .user-row {
+        max-width: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .buddy-shell .user-row label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        text-align: left;
+      }
+      .buddy-shell .user-row input {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+      }
+      .buddy-shell .user-row button {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 10px;
       }
       .user-row input {
         min-width: 12rem;
@@ -101,50 +169,200 @@
       .user-row button:hover {
         border-color: #58a6ff;
       }
+      .user-section {
+        width: 100%;
+      }
+      .user-from-link {
+        margin: 0;
+        padding: 0.35rem 0.25rem;
+        font-size: 0.82rem;
+        line-height: 1.45;
+        color: #8b949e;
+        text-align: center;
+      }
+      .user-manual {
+        border: 1px solid rgba(88, 166, 255, 0.14);
+        border-radius: 12px;
+        padding: 0.5rem 0.75rem 0.75rem;
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .user-manual[hidden] {
+        display: none !important;
+      }
+      .user-manual summary {
+        cursor: pointer;
+        font-size: 0.82rem;
+        color: #9da7b3;
+        user-select: none;
+        list-style-position: outside;
+      }
+      .user-manual summary::-webkit-details-marker {
+        color: #58a6ff;
+      }
+      .user-manual .user-row {
+        margin-top: 0.65rem;
+      }
+      .user-manual .user-hint {
+        margin: 0.4rem 0 0;
+        font-size: 0.72rem;
+        line-height: 1.45;
+        color: #7d8794;
+      }
       .buddy-actions {
         display: flex;
         justify-content: center;
         gap: 0.5rem;
-        padding: 0 1rem;
+        padding: 0;
       }
       .buddy-actions button {
+        flex: 1;
         min-height: 44px;
-        padding: 0.5rem 1rem;
-        border-radius: 10px;
-        border: 1px solid #30363d;
-        background: #21262d;
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        border: 1px solid rgba(88, 166, 255, 0.22);
+        background: linear-gradient(180deg, #252d38 0%, #1c232c 100%);
         color: #e6edf3;
-        font-size: 1rem;
+        font-size: 0.95rem;
+        font-weight: 500;
         cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .buddy-actions button:hover {
+        border-color: rgba(88, 166, 255, 0.45);
+        box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.08);
       }
       .buddy-actions button:active {
-        background: #30363d;
+        background: #1a2028;
+      }
+      /* 气泡绝对定位在精灵框左侧：舞台宽度=精灵框，整页居中时精灵不再随气泡出现而右移 */
+      .buddy-stage {
+        position: relative;
+        width: fit-content;
+        max-width: 100%;
+        margin-inline: auto;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .bubble-host {
+        position: absolute;
+        right: 100%;
+        bottom: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        margin-right: 4px;
+        /* 避免被压成极窄竖条导致中文一字一行 */
+        min-width: min(16rem, calc(100vw - 5rem));
+        max-width: min(18rem, calc(100vw - 3rem));
+      }
+      .bubble-host[hidden] {
+        display: none !important;
+      }
+      .bubble-box {
+        flex: 1 1 auto;
+        min-width: 12rem;
+        max-width: min(17rem, calc(100vw - 4rem));
+        padding: 0.55rem 0.75rem;
+        border: 1px solid rgba(88, 166, 255, 0.28);
+        border-radius: 14px;
+        background: rgba(18, 22, 28, 0.97);
+        box-shadow:
+          0 4px 18px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-style: italic;
+        line-height: 1.55;
+        color: #e6edf3;
+        white-space: pre-wrap;
+        writing-mode: horizontal-tb;
+        word-break: normal;
+        overflow-wrap: break-word;
+        transition:
+          color 0.35s ease,
+          border-color 0.35s ease,
+          opacity 0.35s ease;
+      }
+      .bubble-box.bubble-fading {
+        color: #8b949e;
+        border-color: #484f58;
+      }
+      .bubble-tail {
+        font-family:
+          ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono",
+          Menlo, monospace;
+        font-size: 14px;
+        line-height: 1;
+        align-self: center;
+        user-select: none;
       }
     </style>
   </head>
   <body>
-    <h1>Buddy · 网页（与机器人同源 roll）</h1>
-    <p id="meta" aria-live="polite"></p>
-    <div class="buddy-actions">
-      <button type="button" id="petBtn" title="与终端 /buddy pet 同款表现">
-        抚摸
-      </button>
-    </div>
-    <div id="sprite-panel" aria-live="polite">
-      <div id="sprite-heart"></div>
-      <pre id="sprite-body"></pre>
-    </div>
-    <div class="user-row">
-      <label>
-        用户键（与 <code>feishu-buddy-bot</code> 一致，一般为 open_id）：
-        <input id="userKey" type="text" autocomplete="off" placeholder="留空则 anon 演示" />
-      </label>
-      <button type="button" id="saveUserKey">保存并刷新</button>
+    <div class="buddy-shell">
+      <h1>Buddy · 网页（与机器人同源 roll）</h1>
+      <p id="meta" aria-live="polite"></p>
+      <div class="buddy-actions">
+        <button type="button" id="petBtn" title="与终端 /buddy pet 同款表现">
+          抚摸
+        </button>
+        <button type="button" id="bubbleBtn" title="模拟终端里伙伴的气泡吐槽，约 10 秒后消失">
+          说句闲话
+        </button>
+      </div>
+      <div class="buddy-stage">
+        <div
+          id="bubbleHost"
+          class="bubble-host"
+          hidden
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div id="bubbleBox" class="bubble-box"></div>
+          <span id="bubbleTail" class="bubble-tail" aria-hidden="true">─</span>
+        </div>
+        <div id="sprite-panel" aria-live="polite">
+          <div class="sprite-heart-slot" aria-hidden="true">
+            <div id="sprite-heart"></div>
+          </div>
+          <pre id="sprite-body"></pre>
+        </div>
+      </div>
+      <div id="userSection" class="user-section">
+        <p id="userFromLink" class="user-from-link" hidden>
+          已通过机器人卡片链接识别用户，无需填写下方内容。
+        </p>
+        <details id="userManual" class="user-manual">
+          <summary>不是从飞书链接打开的？点此填写用户键</summary>
+          <p class="user-hint">
+            仅当直接打开网页、没有
+            <code>?user=</code>
+            时需要：填与机器人里存伙伴用的同一个 ID（一般为飞书
+            <code>open_id</code>），保存后刷新才会对上形象。
+          </p>
+          <div class="user-row">
+            <label>
+              用户键
+              <input
+                id="userKey"
+                type="text"
+                autocomplete="off"
+                placeholder="留空则 anon 演示"
+              />
+            </label>
+            <button type="button" id="saveUserKey">保存并刷新</button>
+          </div>
+        </details>
+      </div>
     </div>
     <p class="hint">
       构建：在 <code>feishu-buddy-web</code> 目录执行 <code>npm run build</code>，将本目录整包以
       <strong>HTTPS</strong> 部署（需带上 <code>buddy-web.bundle.js</code>）。<code>?user=open_id</code> 与机器人一致；<code>?nonce=N</code> 与
-      <code>重新孵化</code> 次数对齐（机器人会在配置了网页地址时发链接）。抚摸约 2.5s 爱心 + 快速切帧。
+      <code>重新孵化</code> 对齐（机器人发链接）。若机器人已开只读 HTTP（<code>BUDDY_HTTP_PORT</code>），可加
+      <code>?buddy_api=https://你的机器人域名</code> 与可选 <code>buddy_api_token=</code>（与 <code>BUDDY_HTTP_TOKEN</code> 一致），页面会优先从接口取当前世代，可不依赖链接里的 nonce。抚摸约 2.5s 爱心 + 快速切帧；「说句闲话」模拟终端气泡（约 10s、末段变淡）。
     </p>
     <script type="module">
       import {
@@ -157,6 +375,8 @@
 
       // 与 buddy/CompanionSprite.tsx 一致
       const TICK_MS = 500;
+      const BUBBLE_SHOW = 20; // ticks → ~10s
+      const FADE_WINDOW = 6; // 末 ~3s 变淡
       const PET_BURST_MS = 2500;
       const IDLE_SEQUENCE = [0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0];
       const H = "\u2665"; // figures.heart
@@ -169,16 +389,59 @@
       ];
 
       const LS_KEY = "feishu-buddy-user-key";
+      const LS_API_BASE = "feishu-buddy-api-base";
+      const LS_API_TOKEN = "feishu-buddy-api-token";
       /** 按用户键存 bonesNonce，与 feishu-buddy-bot companion-souls.json 一致 */
       function nonceLsKey(rawKey) {
         return `feishu-buddy-bones-nonce:${rawKey}`;
       }
       const params = new URLSearchParams(location.search);
       const fromUrl = params.get("user")?.trim();
+      const userFromLinkEl = document.getElementById("userFromLink");
+      const userManualEl = document.getElementById("userManual");
       const input = document.getElementById("userKey");
       const metaEl = document.getElementById("meta");
       const heartEl = document.getElementById("sprite-heart");
       const bodyEl = document.getElementById("sprite-body");
+      const bubbleHost = document.getElementById("bubbleHost");
+      const bubbleBox = document.getElementById("bubbleBox");
+      const bubbleTail = document.getElementById("bubbleTail");
+
+      /** 终端 SpeechBubble wrap(text,30) 的网页版，适配中文无空格 */
+      function wrapBubbleText(text, maxChars) {
+        const lines = [];
+        let cur = "";
+        for (const ch of text) {
+          if (ch === "\n") {
+            if (cur) lines.push(cur);
+            cur = "";
+            continue;
+          }
+          if (cur.length >= maxChars) {
+            lines.push(cur);
+            cur = ch;
+          } else {
+            cur += ch;
+          }
+        }
+        if (cur) lines.push(cur);
+        return lines.join("\n");
+      }
+
+      const BUBBLE_QUIPS = [
+        "今天也在认真摸鱼吗？",
+        "记得喝水，键盘不会替你渴。",
+        "我刚才梦见了一行没有分号的代码…",
+        "你敲键盘的声音像在下雨。",
+        "我在这儿呢，回头看看我嘛。",
+        "保存了吗？（只是问问，不催。）",
+        "要不要起来伸个懒腰？",
+        "有点困…但还可以再陪你一会儿。",
+        "这句话我只说一遍：你挺棒的。",
+        "debug 累了就骂我两句，我听着。",
+        "世界很大，窗口很小，你选哪个？",
+        "嘘——我在听风，也在听你。",
+      ];
 
       /** darkTheme，与 types.RARITY_COLORS → Theme 键一致 */
       const RARITY_BODY_RGB = {
@@ -192,27 +455,92 @@
       let userKey = fromUrl || localStorage.getItem(LS_KEY) || "";
       input.value = userKey;
 
+      if (fromUrl) {
+        userFromLinkEl.hidden = false;
+        userManualEl.hidden = true;
+      } else {
+        userFromLinkEl.hidden = true;
+        userManualEl.hidden = false;
+      }
+
+      const buddyApiParam = params.get("buddy_api")?.trim();
+      const buddyTokenParam = params.get("buddy_api_token")?.trim();
+      if (buddyApiParam) localStorage.setItem(LS_API_BASE, buddyApiParam);
+      if (buddyTokenParam) localStorage.setItem(LS_API_TOKEN, buddyTokenParam);
+
+      /**
+       * 机器人 GET /buddy/state?user= → { ok, bonesNonce }；404=未孵化按 nonce 0。
+       * 失败返回 null，改走 resolveBonesNonce。
+       */
+      async function fetchBonesNonceFromApi(rawKey, apiBase, apiToken) {
+        if (!apiBase || rawKey === "anon") return null;
+        let url;
+        try {
+          const base = apiBase.endsWith("/") ? apiBase : `${apiBase}/`;
+          url = new URL("buddy/state", base);
+        } catch {
+          return null;
+        }
+        url.searchParams.set("user", rawKey);
+        const headers = {};
+        if (apiToken) headers["Authorization"] = `Bearer ${apiToken}`;
+        try {
+          const r = await fetch(url.toString(), { headers });
+          if (r.status === 404) {
+            await r.json().catch(() => ({}));
+            return 0;
+          }
+          if (r.status === 401 || !r.ok) return null;
+          const j = await r.json();
+          const n = j.bonesNonce;
+          if (typeof n === "number" && Number.isFinite(n) && n >= 0) return n;
+          return 0;
+        } catch {
+          return null;
+        }
+      }
+
       function resolveBonesNonce(rawKey) {
+        let stored = 0;
+        const s = localStorage.getItem(nonceLsKey(rawKey));
+        if (s !== null) {
+          const n = parseInt(s, 10);
+          if (Number.isFinite(n) && n >= 0) stored = n;
+        }
         const q = params.get("nonce");
         if (q !== null && q !== "") {
           const n = parseInt(q, 10);
           if (Number.isFinite(n) && n >= 0) {
-            localStorage.setItem(nonceLsKey(rawKey), String(n));
-            return n;
+            // Feishu keeps old sync links; never let a stale ?nonce= roll back appearance.
+            const effective = Math.max(n, stored);
+            localStorage.setItem(nonceLsKey(rawKey), String(effective));
+            return effective;
           }
         }
-        const s = localStorage.getItem(nonceLsKey(rawKey));
-        if (s !== null) {
-          const n = parseInt(s, 10);
-          if (Number.isFinite(n) && n >= 0) return n;
-        }
-        return 0;
+        return stored;
       }
 
-      function applyBuddy() {
+      async function resolveBonesNoncePreferred(rawKey) {
+        const apiBase =
+          buddyApiParam || localStorage.getItem(LS_API_BASE) || "";
+        const apiToken =
+          buddyTokenParam || localStorage.getItem(LS_API_TOKEN) || "";
+        const fromApi = await fetchBonesNonceFromApi(
+          rawKey,
+          apiBase,
+          apiToken,
+        );
+        if (fromApi !== null) {
+          localStorage.setItem(nonceLsKey(rawKey), String(fromApi));
+          return fromApi;
+        }
+        return resolveBonesNonce(rawKey);
+      }
+
+      async function applyBuddy() {
         const key = (fromUrl || input.value || "anon").trim() || "anon";
         const seed = `feishu:${key}`;
-        const bonesNonce = resolveBonesNonce(key);
+        const bonesNonce = await resolveBonesNoncePreferred(key);
         const { bones } = roll(seed, bonesNonce);
         const frameCount = spriteFrameCount(bones.species);
         const statLine = STAT_NAMES.map(
@@ -223,6 +551,27 @@
 
         let tick = 0;
         let petStartTick = null;
+        let bubbleText = null;
+        let bubbleStartTick = 0;
+
+        function syncBubble() {
+          if (!bubbleText) {
+            bubbleHost.hidden = true;
+            return;
+          }
+          const age = tick - bubbleStartTick;
+          if (age >= BUBBLE_SHOW) {
+            bubbleText = null;
+            bubbleHost.hidden = true;
+            return;
+          }
+          bubbleHost.hidden = false;
+          const fading = age >= BUBBLE_SHOW - FADE_WINDOW;
+          bubbleBox.classList.toggle("bubble-fading", fading);
+          const rim = fading ? "#484f58" : bodyColor;
+          bubbleBox.style.borderColor = rim;
+          bubbleTail.style.color = rim;
+        }
 
         function paint() {
           const petAge =
@@ -257,10 +606,23 @@
 
           bodyEl.style.color = bodyColor;
           bodyEl.textContent = bodyLines.join("\n");
+          syncBubble();
         }
 
         document.getElementById("petBtn").onclick = () => {
           petStartTick = tick;
+          paint();
+        };
+
+        document.getElementById("bubbleBtn").onclick = () => {
+          const i = Math.floor(Math.random() * BUBBLE_QUIPS.length);
+          bubbleText = BUBBLE_QUIPS[i];
+          bubbleStartTick = tick;
+          bubbleBox.textContent = wrapBubbleText(bubbleText, 22);
+          bubbleBox.classList.remove("bubble-fading");
+          bubbleBox.style.borderColor = bodyColor;
+          bubbleTail.style.color = bodyColor;
+          bubbleHost.hidden = false;
           paint();
         };
 
@@ -272,7 +634,14 @@
         return setInterval(onTick, TICK_MS);
       }
 
-      let timer = applyBuddy();
+      let timer = null;
+      applyBuddy()
+        .then((id) => {
+          timer = id;
+        })
+        .catch((e) => {
+          metaEl.textContent = `加载失败：${e?.message ?? e}`;
+        });
 
       document.getElementById("saveUserKey").addEventListener("click", () => {
         const v = input.value.trim();
