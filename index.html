@@ -299,6 +299,37 @@
         align-self: center;
         user-select: none;
       }
+      /*
+       * 移动端：左侧绝对定位会挤出视口 → 改为气泡在上、精灵在下，全宽横排文案。
+       * 560px 兼顾竖屏手机与飞书内置浏览器。
+       */
+      @media (max-width: 560px) {
+        .buddy-stage {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+        .bubble-host {
+          position: static;
+          width: 100%;
+          min-width: 0;
+          max-width: 100%;
+          margin: 0 0 0.6rem;
+          justify-content: center;
+          align-self: stretch;
+        }
+        .bubble-box {
+          flex: 1 1 auto;
+          min-width: 0;
+          max-width: 100%;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .bubble-tail {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
